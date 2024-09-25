@@ -1,44 +1,55 @@
-import AiAssistant from "./components/AiAssistant";
+import Assistant from "./components/Assistant";
+import LinkedInAIModal from "./components/LinkedinAiModal";
 
 function App() {
-  const LinkedinMessageClass = ".msg-form__msg-content-container--scrollable";
-  const [modal, setModal] = useState(false);
-  const [focusedElement, setFocusedElement] = useState<HTMLElement | null>(
-    null
-  );
+  const messageContainerSelector =
+    ".msg-form__msg-content-container--scrollable";
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeElement, setActiveElement] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
-    const handleFocusIn = (event: Event) => {
-      const target = event.target as HTMLElement;
-      const container = target.closest(LinkedinMessageClass) as HTMLElement;
-      if (container) {
-        setFocusedElement(container);
+    const handleElementFocus = (event: Event) => {
+      console.log("on focus");
+      const targetElement = event.target as HTMLElement;
+      const messageContainer = targetElement.closest(
+        messageContainerSelector
+      ) as HTMLElement;
+      if (messageContainer) {
+        setActiveElement(messageContainer); // Set active element when the message container is focused
       }
     };
 
-    const handleFocusOut = (event: FocusEvent) => {
-      const target = event.target as HTMLElement;
-      const container = target.closest(LinkedinMessageClass) as HTMLElement;
-      const relatedTarget = event.relatedTarget as HTMLElement;
-      if (container && (!relatedTarget || !container.contains(relatedTarget))) {
-        setFocusedElement(null);
+    const handleElementBlur = (event: FocusEvent) => {
+      console.log("on blur");
+      const targetElement = event.target as HTMLElement;
+      const messageContainer = targetElement.closest(
+        messageContainerSelector
+      ) as HTMLElement;
+      const nextFocusedElement = event.relatedTarget as HTMLElement;
+      if (
+        messageContainer &&
+        (!nextFocusedElement || !messageContainer.contains(nextFocusedElement))
+      ) {
+        setActiveElement(null); // Reset active element when focus leaves the message container
       }
     };
 
-    document.addEventListener("focusin", handleFocusIn);
-    document.addEventListener("focusout", handleFocusOut);
+    document.addEventListener("focusin", handleElementFocus);
+    document.addEventListener("focusout", handleElementBlur);
 
     return () => {
-      document.removeEventListener("focusin", handleFocusIn);
-      document.removeEventListener("focusout", handleFocusOut);
+      document.removeEventListener("focusin", handleElementFocus);
+      document.removeEventListener("focusout", handleElementBlur);
     };
   }, []);
 
   return (
     <>
-      {focusedElement && (
-        <AiAssistant container={focusedElement} setModal={setModal} />
+      {activeElement && (
+        <Assistant container={activeElement} setModalOpen={setIsModalOpen} />
       )}
+
+      {isModalOpen && <LinkedInAIModal setModalOpen={setIsModalOpen} />}
     </>
   );
 }

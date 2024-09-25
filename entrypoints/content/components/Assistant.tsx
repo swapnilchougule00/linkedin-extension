@@ -2,9 +2,9 @@ import { useEffect } from "react";
 import { createPortal } from "react-dom";
 interface AiHelper {
   container: HTMLElement;
-  setModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
-function AiAssistant({ container, setModal }: AiHelper) {
+function Assistant({ container, setModalOpen }: AiHelper) {
   useEffect(() => {
     console.log(container);
   });
@@ -28,7 +28,7 @@ function AiAssistant({ container, setModal }: AiHelper) {
           boxShadow: "5px 5px 10px #0000001A",
         }}
         title="AI Assistant"
-        onClick={() => setModal(true)}
+        onClick={() => setModalOpen(true)}
       >
         <svg
           width="16"
@@ -48,4 +48,4 @@ function AiAssistant({ container, setModal }: AiHelper) {
   );
 }
 
-export default AiAssistant;
+export default Assistant;
