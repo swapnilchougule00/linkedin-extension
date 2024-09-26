@@ -20,7 +20,7 @@ export function Modal({ children, setModalOpen }: ModalProps) {
     >
       <div
         ref={modalRef}
-        className="bg-white rounded-lg shadow-xl w-full max-w-[40%]"
+        className="bg-white rounded-xl shadow-xl w-full max-w-[40%]"
       >
         {children}
       </div>
